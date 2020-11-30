@@ -1,22 +1,18 @@
 import firebase from "firebase";
 
-
-
 const firebaseConfig = {
-    apiKey: "AIzaSyDENBz-ya8-avPEPosKm-iAcMJOXUNQBKE",
-    authDomain: "clone-fca57.firebaseapp.com",
-    databaseURL: "https://clone-fca57.firebaseio.com",
-    projectId: "clone-fca57",
-    storageBucket: "clone-fca57.appspot.com",
-    messagingSenderId: "204210190552",
-    appId: "1:204210190552:web:2a61af6fb73d26457e3fad"
-  };
-
-
+    apiKey: "AIzaSyDdkiCHgT3H-UjzB0H4BHGYJNUqvQi_DdU",
+    authDomain: "clone-caffa.firebaseapp.com",
+    databaseURL: "https://clone-caffa.firebaseio.com",
+    projectId: "clone-caffa",
+    storageBucket: "clone-caffa.appspot.com",
+    messagingSenderId: "988703000926",
+    appId: "1:988703000926:web:d324fd58baefd114e427cf"
+};
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
 const db = firebaseApp.firestore();
 const auth = firebase.auth();
 
-export { db, auth};
+export { db, auth };

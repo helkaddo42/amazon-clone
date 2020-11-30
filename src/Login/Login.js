@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import './login.css'
+import './Login.css'
 import { Link, useHistory } from "react-router-dom";
 import { auth } from "../firebase";
 
 function Login() {
-    
     const history = useHistory();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -26,7 +25,6 @@ function Login() {
         auth
             .createUserWithEmailAndPassword(email, password)
             .then((auth) => {
-                // it successfully created a new user with email and password
                 if (auth) {
                     history.push('/')
                 }
@@ -40,14 +38,14 @@ function Login() {
                 <img
                     className="login__logo"
                     src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1024px-Amazon_logo.svg.png' 
-                    alt='login_logo'
+                    alt="login_logo"
                 />
             </Link>
 
             <div className='login__container'>
                 <h1>Sign-in</h1>
 
-                <form  >
+                <form>
                     <h5>E-mail</h5>
                     <input type='text' value={email} onChange={e => setEmail(e.target.value)} />
 
@@ -62,7 +60,7 @@ function Login() {
                     see our Privacy Notice, our Cookies Notice and our Interest-Based Ads Notice.
                 </p>
 
-                <button className='login__registerButton' onClick={register} >Create your Amazon Account</button>
+                <button onClick={register} className='login__registerButton'>Create your Amazon Account</button>
             </div>
         </div>
     )

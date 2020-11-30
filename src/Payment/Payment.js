@@ -1,70 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import './Payment.css';
+import React, { useState } from 'react';
 import { useStateValue } from "../StateProvider";
 import CheckoutProduct from "../CheckoutProduct/CheckoutProduct";
-import { Link, useHistory } from "react-router-dom";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { Link } from "react-router-dom";
+import { CardElement } from "@stripe/react-stripe-js";
 import CurrencyFormat from "react-currency-format";
 import { getBasketTotal } from "../reducer";
-import axios from '../axios';
-import { db } from "../firebase";
+import { useHistory } from 'react-router-dom';
+import './Payment.css';
 
 function Payment() {
-    const [{ basket, user }, dispatch] = useStateValue();
-    const history = useHistory();
-
-    const stripe = useStripe();
-    const elements = useElements();
-
-    const [succeeded, setSucceeded] = useState(false);
+    const [{ basket, user },] = useStateValue();
     const [processing, setProcessing] = useState("");
     const [error, setError] = useState(null);
     const [disabled, setDisabled] = useState(true);
-    const [clientSecret, setClientSecret] = useState(true);
 
-    useEffect(() => {
-        const getClientSecret = async () => {
-            const response = await axios({
-                method: 'post',
-                url: `/payments/create?total=${getBasketTotal(basket) * 100}`
-            });
-            setClientSecret(response.data.clientSecret)
-        }
+    const history = useHistory();
 
-        getClientSecret();
-    }, [basket])
-
-    const handleSubmit = async (event) => {
+    const handleSubmit = (event) => {
+        console.log("user -->", user)
         event.preventDefault();
         setProcessing(true);
-
-        const payload = await stripe.confirmCardPayment(clientSecret, {
-            payment_method: {
-                card: elements.getElement(CardElement)
-            }
-        }).then(({ paymentIntent }) => {
-
-            db
-              .collection('users')
-              .doc(user?.uid)
-              .collection('orders')
-              .doc(paymentIntent.id)
-              .set({
-                  basket: basket,
-                  amount: paymentIntent.amount,
-                  created: paymentIntent.created
-              })
-
-            setSucceeded(true);
-            setError(null)
-            setProcessing(false)
-
-            dispatch({
-                type: 'EMPTY_BASKET'
-            })
-            history.replace('/orders')
-        })
-        console.log(payload)
+        
+        setTimeout(()=> {
+            setProcessing(false);
+            history.push('/commandeSucces')
+        }, 2000)
     }
 
     const handleChange = event => {
@@ -76,9 +36,7 @@ function Payment() {
         <div className='payment'>
             <div className='payment__container'>
                 <h1>
-                    Checkout (
-                        <Link to="/checkout">{basket?.length} items</Link>
-                        )
+                    Checkout (<Link to="/checkout">{basket?.length} items</Link>)
                 </h1>
 
                 <div className='payment__section'>
@@ -131,9 +89,10 @@ function Payment() {
                                     thousandSeparator={true}
                                     prefix={"$"}
                                 />
-                                <button disabled={processing || disabled || succeeded}>
-                                    <span>{processing ? <p>Processing</p> : "Buy Now"}</span>
+                                <button style={{cursor:'pointer'}}disabled={processing || disabled || user === null}>
+                                    <span>{processing ? <p>Loading ...</p> : "Buy Now"}</span>
                                 </button>
+                                {user === null && <p>Log in to place your order</p>}
                             </div>
 
                             {error && <div>{error}</div>}
